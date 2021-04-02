@@ -1,7 +1,9 @@
 package com.parkit.parkingsystem.integration;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -58,12 +60,8 @@ public class ParkingDataBaseIT {
         assertNotNull(ticket);
         assertNotNull(ticket.getInTime());
         assertNull(ticket.getOutTime());
-        ParkingSpot parkingSpot = parkingSpotDAO.getNextAvailableSlot(1);
-        //assertFalse(parkingSpot.isAvailable());
-        
-        
-        
-        //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
+        ParkingSpot parkingSpot = ticket.getParkingSpot();
+        assertFalse(parkingSpot.isAvailable());
     }
 
     @Test
@@ -72,7 +70,9 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        //TODO: check that the fare generated and out time are populated correctly in the database
+        assertNotNull(ticket.getOutTime());
+        assertTrue(ticket.getPrice()<=0);
+        
     }
 
 }
