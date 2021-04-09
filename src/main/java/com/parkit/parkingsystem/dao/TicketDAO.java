@@ -20,7 +20,7 @@ public class TicketDAO {
 
 	private static final Logger logger = LogManager.getLogger("TicketDAO");
 
-	public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	public boolean saveTicket(Ticket ticket){
 		Connection con = null;
@@ -90,25 +90,23 @@ public class TicketDAO {
 		return false;
 	}
 
-	public void checkExistingVehicle (Ticket ticket) {
+	public boolean checkExistingVehicle (Ticket ticket) {
 		Connection con = null;
 		try {		
 			con = dataBaseConfig.getConnection();
 			String vehicle = ticket.getVehicleRegNumber();
-			PreparedStatement ps = con.prepareStatement(DBConstants.GET_AN_EXISTING_CAR);
+			PreparedStatement ps = con.prepareStatement(DBConstants.GET_AN_EXISTING_VEHICLE);
 			ps.setString(1, vehicle);
 			ResultSet rs = ps.executeQuery();
-			//			Statement stmt = con.createStatement();
-			//			//String SQL = "SELECT count(*) as VEHICLE_REG_NUMBER FROM prod.ticket where VEHICLE_REG_NUMBER = '" + vehicle +"' having count(*)>2";
-			//			//String SQL = "SELECT * FROM prod.ticket where VEHICLE_REG_NUMBER = '" + vehicle + "' AND OUT_TIME";
-			//			ResultSet rs = stmt.executeQuery(SQL);
 			if(rs.next()){
-				ticket.setPrice(ticket.getPrice()*0.90);
+				return true;
+			} else {
+				return false;
 			}
-			else {
-				ticket.getPrice();
-			}}catch (Exception ex) {
-				logger.error("Error trying to verify existing Vehicle number", ex);
-			}
+		}catch (Exception ex) {
+			logger.error("Error trying to verify existing Vehicle number", ex);
+			return false;
+		}
 	}
 }
+
