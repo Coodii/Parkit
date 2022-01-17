@@ -6,22 +6,29 @@ import java.sql.Connection;
 
 public class DataBasePrepareService {
 
-    DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
+    /**
+     * Initialise a database test configuration.
+     */
+    private DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 
-    public void clearDataBaseEntries(){
+    /**
+     * This method clears the database.
+     */
+    public void clearDataBaseEntries() {
         Connection connection = null;
-        try{
+        try {
             connection = dataBaseTestConfig.getConnection();
 
             //set parking entries to available
-            connection.prepareStatement("update parking set available = true").execute();
+            connection.prepareStatement("update parking set available = true").
+                    execute();
 
             //clear ticket entries;
             connection.prepareStatement("truncate table ticket").execute();
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             dataBaseTestConfig.closeConnection(connection);
         }
     }
